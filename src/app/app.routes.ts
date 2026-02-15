@@ -20,6 +20,8 @@ import { SignUpComponent } from './pages/auth-pages/sign-up/sign-up.component';
 import { CalenderComponent } from './pages/calender/calender.component';
 import { ShortenerComponent } from './pages/shortener/shortener.component';
 import { MyShortenerUrlsComponent } from './pages/my-shortener-urls/my-shortener-urls.component';
+import { ImageShortenerComponent } from './pages/image-shortener/image-shortener.component';
+import { MyUploadedImagesComponent } from './pages/my-uploaded-images/my-uploaded-images.component';
 import { VerifyEmailComponent } from './pages/auth-pages/verify-email/verify-email.component';
 import { authGuard } from './guards/auth.guard';
 
@@ -39,6 +41,16 @@ export const routes: Routes = [
         path: 'my-shortener-urls',
         component: MyShortenerUrlsComponent,
         title: 'My Shortener URLs',
+      },
+      {
+        path: 'image-shortener',
+        component: ImageShortenerComponent,
+        title: 'Image Shortener',
+      },
+      {
+        path: 'my-uploaded-images',
+        component: MyUploadedImagesComponent,
+        title: 'My Uploaded Images',
       },
       {
         path: 'dashboard',

@@ -1,0 +1,133 @@
+<app-page-breadcrumb pageTitle="My Uploaded Images" />
+<div class="space-y-6">
+  <app-component-card
+    title="My Uploaded Images"
+    desc="Images you uploaded; each has a short link at /i/{code}."
+  >
+    @if (loading()) {
+      <p class="py-8 text-center text-theme-sm text-gray-500 dark:text-gray-400">
+        Loading…
+      </p>
+    } @else if (error()) {
+      <div
+        class="rounded-lg border border-error-200 bg-error-50 px-4 py-3 text-theme-sm text-error-700 dark:border-error-800 dark:bg-error-500/10 dark:text-error-400"
+        role="alert"
+      >
+        {{ error() }}
+      </div>
+    } @else {
+      <div
+        class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]"
+      >
+        <div class="max-w-full overflow-x-auto">
+          <table class="min-w-full">
+            <thead class="border-b border-gray-100 dark:border-white/[0.05]">
+              <tr>
+                <th
+                  class="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                >
+                  Preview
+                </th>
+                <th
+                  class="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                >
+                  QR
+                </th>
+                <th
+                  class="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                >
+                  Short Code
+                </th>
+                <th
+                  class="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                >
+                  Image URL
+                </th>
+                <th
+                  class="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                >
+                  File name
+                </th>
+                <th
+                  class="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                >
+                  Created
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 dark:divide-white/[0.05]">
+              @if (items().length === 0) {
+                <tr>
+                  <td
+                    colspan="6"
+                    class="px-5 py-8 text-center text-theme-sm text-gray-500 dark:text-gray-400"
+                  >
+                    No uploaded images yet. Add one from the Image Shortener
+                    page.
+                  </td>
+                </tr>
+              }
+              @for (row of items(); track row.id) {
+                <tr>
+                  <td class="px-5 py-4 sm:px-6 text-start">
+                    <a
+                      [href]="imageViewUrl(row.shortCode)"
+                      target="_blank"
+                      rel="noopener"
+                      class="inline-block"
+                    >
+                      <img
+                        [src]="row.imageUrl"
+                        [alt]="row.originalFileName || row.shortCode"
+                        class="h-14 w-14 rounded border border-gray-200 object-cover dark:border-gray-700"
+                        loading="lazy"
+                      />
+                    </a>
+                  </td>
+                  <td class="px-5 py-4 sm:px-6 text-start">
+                    <a
+                      [href]="imageViewUrl(row.shortCode)"
+                      target="_blank"
+                      rel="noopener"
+                      class="inline-block"
+                    >
+                      <img
+                        [src]="qrImageUrl(row.imageUrl)"
+                        [alt]="'QR for ' + row.shortCode"
+                        width="80"
+                        height="80"
+                        class="rounded border border-gray-200 dark:border-gray-700"
+                      />
+                    </a>
+                  </td>
+                  <td class="px-4 py-3 text-start">
+                    <a
+                      [href]="imageViewUrl(row.shortCode)"
+                      target="_blank"
+                      rel="noopener"
+                      class="font-medium text-brand-500 hover:text-brand-600 dark:text-brand-400"
+                    >
+                      {{ row.shortCode }}
+                    </a>
+                  </td>
+                  <td
+                    class="max-w-[220px] px-4 py-3 text-theme-sm text-gray-500 dark:text-gray-400 truncate"
+                    [title]="row.imageUrl"
+                  >
+                    {{ row.imageUrl }}
+                  </td>
+                  <td class="px-4 py-3 text-theme-sm text-gray-800 dark:text-white/90">
+                    {{ row.originalFileName || '—' }}
+                  </td>
+                  <td class="px-4 py-3 text-theme-sm text-gray-500 dark:text-gray-400">
+                    {{ formatDate(row.createdAt) }}
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+  </app-component-card>
+</div>
