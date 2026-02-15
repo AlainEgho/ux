@@ -19,6 +19,7 @@ import { SignInComponent } from './pages/auth-pages/sign-in/sign-in.component';
 import { SignUpComponent } from './pages/auth-pages/sign-up/sign-up.component';
 import { CalenderComponent } from './pages/calender/calender.component';
 import { ShortenerComponent } from './pages/shortener/shortener.component';
+import { MyShortenerUrlsComponent } from './pages/my-shortener-urls/my-shortener-urls.component';
 import { VerifyEmailComponent } from './pages/auth-pages/verify-email/verify-email.component';
 import { authGuard } from './guards/auth.guard';
 
@@ -33,6 +34,11 @@ export const routes: Routes = [
         component: ShortenerComponent,
         pathMatch: 'full',
         title: 'URL Shortener',
+      },
+      {
+        path: 'my-shortener-urls',
+        component: MyShortenerUrlsComponent,
+        title: 'My Shortener URLs',
       },
       {
         path: 'dashboard',
