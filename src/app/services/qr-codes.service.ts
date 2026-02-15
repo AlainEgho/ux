@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 const API_BASE = 'http://localhost:8081';
+/** Base URL for short links (redirect/view); may differ from API. */
+const SHORT_LINK_BASE = 'http://localhost:3000';
 
 export interface QrCodeItem {
   id: number;
@@ -48,8 +50,8 @@ export class QrCodesService {
     return this.http.get<unknown>(`${API_BASE}/api/qr-codes`).pipe(map(unwrapList));
   }
 
-  /** Base URL for short links (e.g. http://localhost:8081/s/abc123) */
+  /** Base URL for short links (e.g. http://localhost:3000/s/abc123) */
   shortLinkUrl(shortCode: string): string {
-    return `${API_BASE}/s/${shortCode}`;
+    return `${SHORT_LINK_BASE}/s/${shortCode}`;
   }
 }

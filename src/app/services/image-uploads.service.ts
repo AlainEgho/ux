@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 const API_BASE = 'http://localhost:8081';
+/** Base URL for image view links (redirect/view); may differ from API. */
+const IMAGE_VIEW_BASE = 'http://localhost:3000';
 
 export interface ImageUploadRequest {
   base64: string;
@@ -64,8 +66,8 @@ export class ImageUploadsService {
     return this.http.get<unknown>(this.url).pipe(map(unwrapImageList));
   }
 
-  /** URL to view image: /i/{shortCode} */
+  /** URL to view image: /i/{shortCode} (uses IMAGE_VIEW_BASE for redirect) */
   imageViewUrl(shortCode: string): string {
-    return `${API_BASE}/i/${shortCode}`;
+    return `${IMAGE_VIEW_BASE}/i/${shortCode}`;
   }
 }
