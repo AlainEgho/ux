@@ -22,19 +22,31 @@ import { ShortenerComponent } from './pages/shortener/shortener.component';
 import { MyShortenerUrlsComponent } from './pages/my-shortener-urls/my-shortener-urls.component';
 import { ImageShortenerComponent } from './pages/image-shortener/image-shortener.component';
 import { MyUploadedImagesComponent } from './pages/my-uploaded-images/my-uploaded-images.component';
+import { CreateCategoryComponent } from './pages/create-category/create-category.component';
+import { LandingComponent } from './pages/landing/landing.component';
 import { VerifyEmailComponent } from './pages/auth-pages/verify-email/verify-email.component';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
     path: '',
+    component: LandingComponent,
+    pathMatch: 'full',
+    title: 'Categories',
+  },
+  {
+    path: 'app',
     component: AppLayoutComponent,
     canActivate: [authGuard],
     children: [
       {
         path: '',
-        component: ShortenerComponent,
+        redirectTo: 'shortener',
         pathMatch: 'full',
+      },
+      {
+        path: 'shortener',
+        component: ShortenerComponent,
         title: 'URL Shortener',
       },
       {
@@ -51,6 +63,11 @@ export const routes: Routes = [
         path: 'my-uploaded-images',
         component: MyUploadedImagesComponent,
         title: 'My Uploaded Images',
+      },
+      {
+        path: 'create-category',
+        component: CreateCategoryComponent,
+        title: 'Create Category',
       },
       {
         path: 'dashboard',

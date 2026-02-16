@@ -36,7 +36,7 @@ export class SigninFormComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.auth.isAuthenticated()) {
-      this.router.navigate(['/']);
+      this.router.navigate(['/app/shortener']);
     }
   }
 
@@ -59,7 +59,7 @@ export class SigninFormComponent implements OnInit {
       next: (res) => {
         this.loading.set(false);
         if (res.success) {
-          this.router.navigate(['/']);
+          this.router.navigate(['/app/shortener']);
         } else {
           this.error.set(res.message || 'Login failed.');
         }

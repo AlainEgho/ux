@@ -38,7 +38,7 @@ export class SignupFormComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.auth.isAuthenticated()) {
-      this.router.navigate(['/']);
+      this.router.navigate(['/app/shortener']);
     }
   }
 
@@ -73,7 +73,7 @@ export class SignupFormComponent implements OnInit {
       next: (res) => {
         this.loading.set(false);
         if (res.success) {
-          this.router.navigate(['/']);
+          this.router.navigate(['/app/shortener']);
         } else {
           this.error.set(res.message || 'Registration failed.');
         }
