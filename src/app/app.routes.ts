@@ -23,6 +23,9 @@ import { MyShortenerUrlsComponent } from './pages/my-shortener-urls/my-shortener
 import { ImageShortenerComponent } from './pages/image-shortener/image-shortener.component';
 import { MyUploadedImagesComponent } from './pages/my-uploaded-images/my-uploaded-images.component';
 import { CreateCategoryComponent } from './pages/create-category/create-category.component';
+import { CreateItemComponent } from './pages/create-item/create-item.component';
+import { CategoryItemsComponent } from './pages/category-items/category-items.component';
+import { ItemLeafComponent } from './pages/item-leaf/item-leaf.component';
 import { LandingComponent } from './pages/landing/landing.component';
 import { VerifyEmailComponent } from './pages/auth-pages/verify-email/verify-email.component';
 import { authGuard } from './guards/auth.guard';
@@ -33,6 +36,16 @@ export const routes: Routes = [
     component: LandingComponent,
     pathMatch: 'full',
     title: 'Categories',
+  },
+  {
+    path: 'category/:categoryId',
+    component: CategoryItemsComponent,
+    title: 'Category Items',
+  },
+  {
+    path: 'item/:itemId',
+    component: ItemLeafComponent,
+    title: 'Item',
   },
   {
     path: 'app',
@@ -68,6 +81,11 @@ export const routes: Routes = [
         path: 'create-category',
         component: CreateCategoryComponent,
         title: 'Create Category',
+      },
+      {
+        path: 'create-item',
+        component: CreateItemComponent,
+        title: 'Create Item',
       },
       {
         path: 'dashboard',

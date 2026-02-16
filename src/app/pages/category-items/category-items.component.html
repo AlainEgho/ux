@@ -1,25 +1,17 @@
 <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-  <!-- Header with Login Button -->
+  <!-- Header -->
   <header class="border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
     <div class="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <img
-            src="/images/logo/logo-icon.svg"
-            alt="Logo"
-            width="32"
-            height="32"
-            class="dark:hidden"
-          />
-          <img
-            src="/images/logo/logo-icon.svg"
-            alt="Logo"
-            width="32"
-            height="32"
-            class="hidden dark:block"
-          />
+        <div class="flex items-center gap-4">
+          <a
+            routerLink="/"
+            class="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+          >
+            ← Categories
+          </a>
           <h1 class="text-xl font-semibold text-gray-900 dark:text-white">
-            Categories
+            {{ categoryName() || 'Items' }}
           </h1>
         </div>
         <a
@@ -34,18 +26,9 @@
 
   <!-- Main Content -->
   <main class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-    <div class="mb-8">
-      <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">
-        Browse Categories
-      </h2>
-      <p class="mt-2 text-gray-500 dark:text-gray-400">
-        Explore all available categories. Sign in to create your own.
-      </p>
-    </div>
-
     @if (loading()) {
       <div class="py-12 text-center">
-        <p class="text-gray-500 dark:text-gray-400">Loading categories…</p>
+        <p class="text-gray-500 dark:text-gray-400">Loading items…</p>
       </div>
     } @else if (error()) {
       <div
@@ -54,21 +37,19 @@
       >
         {{ error() }}
       </div>
-    } @else if (categories().length === 0) {
+    } @else if (items().length === 0) {
       <div class="py-12 text-center">
-        <p class="text-gray-500 dark:text-gray-400">
-          No categories available yet.
-        </p>
+        <p class="text-gray-500 dark:text-gray-400">No items in this category.</p>
       </div>
     } @else {
       <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        @for (category of categories(); track category.id) {
+        @for (item of items(); track item.id) {
           <a
-            [routerLink]="['/category', category.id]"
-            [state]="{ categoryName: category.description }"
+            [routerLink]="['/item', item.id]"
+            [state]="{ item: item, categoryId: categoryId(), categoryName: categoryName() }"
             class="block focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 rounded-xl"
           >
-            <app-category-card [category]="category" />
+            <app-item [item]="item" />
           </a>
         }
       </div>

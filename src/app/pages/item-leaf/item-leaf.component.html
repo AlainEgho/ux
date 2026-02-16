@@ -1,0 +1,149 @@
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+  <!-- Header -->
+  <header class="border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
+    <div class="mx-auto max-w-4xl px-4 py-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between">
+        <a
+          [routerLink]="backLink()"
+          [state]="{ categoryName: categoryName() }"
+          class="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+        >
+          ← {{ backLabel() }}
+        </a>
+        <a
+          routerLink="/signin"
+          class="rounded-lg bg-brand-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-brand-600"
+        >
+          Sign In
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+    @if (item(); as it) {
+      <div class="rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-800/50">
+        <!-- Image -->
+        <div class="h-72 overflow-hidden rounded-t-2xl bg-gray-100 dark:bg-gray-800 sm:h-96">
+          @if (it.imageUrl && !imageFailed()) {
+            <img
+              [src]="it.imageUrl"
+              [alt]="it.description"
+              class="h-full w-full object-cover"
+              (error)="onImageError()"
+            />
+          } @else {
+            <div class="flex h-full w-full items-center justify-center text-gray-400 dark:text-gray-500">
+              <svg class="h-24 w-24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+          }
+        </div>
+
+        <div class="p-6 sm:p-8">
+          <!-- Title & Status -->
+          <div class="mb-6 flex flex-wrap items-start justify-between gap-4">
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">
+              {{ it.description }}
+            </h1>
+            <span
+              class="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium"
+              [class.bg-success-100]="it.active"
+              [class.text-success-800]="it.active"
+              [class.dark:bg-success-500/20]="it.active"
+              [class.dark:text-success-400]="it.active"
+              [class.bg-gray-100]="!it.active"
+              [class.text-gray-600]="!it.active"
+              [class.dark:bg-gray-700]="!it.active"
+              [class.dark:text-gray-400]="!it.active"
+            >
+              {{ it.active ? 'Active' : 'Inactive' }}
+            </span>
+          </div>
+
+          <!-- Detail -->
+          @if (it.detail) {
+            <section class="mb-6">
+              <h2 class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Detail</h2>
+              <div class="rounded-xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/50">
+                <dl class="grid gap-3 sm:grid-cols-3">
+                  <div>
+                    <dt class="text-xs text-gray-500 dark:text-gray-400">Quantity</dt>
+                    <dd class="text-lg font-medium text-gray-900 dark:text-white">{{ it.detail.quantity }}</dd>
+                  </div>
+                  <div>
+                    <dt class="text-xs text-gray-500 dark:text-gray-400">Price</dt>
+                    <dd class="text-lg font-medium text-gray-900 dark:text-white">{{ formatPrice(it.detail.price) }}</dd>
+                  </div>
+                  <div>
+                    <dt class="text-xs text-gray-500 dark:text-gray-400">Detail ID</dt>
+                    <dd class="text-lg font-medium text-gray-900 dark:text-white">{{ it.detail.id }}</dd>
+                  </div>
+                </dl>
+              </div>
+            </section>
+          }
+
+          <!-- Address -->
+          @if (it.address) {
+            <section class="mb-6">
+              <h2 class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Address</h2>
+              <div class="rounded-xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/50">
+                <p class="font-medium text-gray-900 dark:text-white">{{ it.address.addressName }}</p>
+                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                  Latitude: {{ it.address.latitude }} · Longitude: {{ it.address.longitude }}
+                </p>
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-500">Address ID: {{ it.address.id }}</p>
+              </div>
+            </section>
+          }
+
+          <!-- Contact -->
+          @if (it.contact) {
+            <section class="mb-6">
+              <h2 class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Contact</h2>
+              <div class="rounded-xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/50">
+                <p class="font-medium text-gray-900 dark:text-white">
+                  {{ it.contact.firstName }} {{ it.contact.lastName }}
+                </p>
+                <p class="mt-1 text-gray-600 dark:text-gray-400">{{ it.contact.phone }}</p>
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-500">Contact ID: {{ it.contact.id }}</p>
+              </div>
+            </section>
+          }
+
+          <!-- Meta -->
+          <section class="border-t border-gray-200 pt-6 dark:border-gray-700">
+            <dl class="flex flex-wrap gap-x-6 gap-y-1 text-sm text-gray-500 dark:text-gray-400">
+              <div>
+                <dt class="inline font-medium">Item ID:</dt>
+                <dd class="inline">{{ it.id }}</dd>
+              </div>
+              <div>
+                <dt class="inline font-medium">Category ID:</dt>
+                <dd class="inline">{{ it.categoryId }}</dd>
+              </div>
+              <div>
+                <dt class="inline font-medium">Created:</dt>
+                <dd class="inline">{{ formatDate(it.createdAt) }}</dd>
+              </div>
+              @if (it.updatedAt) {
+                <div>
+                  <dt class="inline font-medium">Updated:</dt>
+                  <dd class="inline">{{ formatDate(it.updatedAt) }}</dd>
+                </div>
+              }
+            </dl>
+          </section>
+        </div>
+      </div>
+    } @else {
+      <div class="rounded-lg border border-error-200 bg-error-50 px-4 py-8 text-center text-error-700 dark:border-error-800 dark:bg-error-500/10 dark:text-error-400">
+        <p class="font-medium">Item not found.</p>
+        <p class="mt-2 text-sm">Go back to <a routerLink="/" class="underline">categories</a>.</p>
+      </div>
+    }
+  </main>
+</div>

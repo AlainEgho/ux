@@ -1,0 +1,244 @@
+<app-page-breadcrumb pageTitle="Create Item" />
+<div class="space-y-6">
+  <app-component-card
+    title="Create New Item"
+    desc="Add a new item with description, category, optional image, detail, address and contact."
+  >
+    <div class="mx-auto max-w-2xl">
+      @if (success(); as created) {
+        <div
+          class="mb-6 rounded-lg border border-success-200 bg-success-50 px-4 py-3 text-sm text-success-700 dark:border-success-800 dark:bg-success-500/10 dark:text-success-400"
+          role="alert"
+        >
+          <p class="font-medium">Item created successfully!</p>
+          <p class="mt-1">Redirecting to category…</p>
+        </div>
+      } @else {
+        <form (ngSubmit)="onSubmit()" class="space-y-6">
+          <!-- Description -->
+          <div>
+            <label for="description" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Description <span class="text-error-500">*</span>
+            </label>
+            <textarea
+              id="description"
+              [(ngModel)]="description"
+              name="description"
+              rows="3"
+              placeholder="e.g. Wedding cake - 3 tiers"
+              class="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-800 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 dark:border-gray-800 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-gray-500"
+              [disabled]="loading()"
+            ></textarea>
+          </div>
+
+          <!-- Category dropdown -->
+          <div>
+            <label for="categoryId" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Category <span class="text-error-500">*</span>
+            </label>
+            <select
+              id="categoryId"
+              [(ngModel)]="categoryId"
+              name="categoryId"
+              class="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-800 shadow-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 dark:border-gray-800 dark:bg-gray-900 dark:text-white/90"
+              [disabled]="loading()"
+              required
+            >
+              <option value="" disabled>Select a category</option>
+              @for (cat of categories(); track cat.id) {
+                <option [value]="cat.id">{{ cat.description }}</option>
+              }
+            </select>
+          </div>
+
+          <!-- Image -->
+          <div>
+            <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Image <span class="text-gray-400">(optional)</span>
+            </label>
+            @if (imagePreview()) {
+              <div class="mb-3">
+                <div class="relative inline-block">
+                  <img [src]="imagePreview()!" alt="Preview" class="h-40 rounded-lg border border-gray-200 object-cover dark:border-gray-700" />
+                  <button
+                    type="button"
+                    (click)="removeImage()"
+                    class="absolute right-2 top-2 rounded-full bg-error-500 p-1.5 text-white shadow-sm hover:bg-error-600"
+                    [disabled]="loading()"
+                  >
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                  </button>
+                </div>
+              </div>
+            }
+            <label
+              class="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 py-6 transition hover:border-brand-300 dark:border-gray-700 dark:bg-gray-900/50"
+              [class.pointer-events-none]="loading()"
+            >
+              <input type="file" accept="image/*" class="hidden" (change)="onFileSelected($event)" [disabled]="loading()" />
+              <span class="text-sm text-gray-600 dark:text-gray-400">{{ imagePreview() ? 'Change image' : 'Choose image' }}</span>
+            </label>
+          </div>
+
+          <!-- Active -->
+          <div class="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="active"
+              [(ngModel)]="active"
+              name="active"
+              class="h-4 w-4 rounded border-gray-300 text-brand-500 focus:ring-brand-500"
+              [disabled]="loading()"
+            />
+            <label for="active" class="text-sm font-medium text-gray-700 dark:text-gray-300">Active</label>
+          </div>
+
+          <!-- Detail -->
+          <fieldset class="rounded-xl border border-gray-200 p-4 dark:border-gray-700">
+            <legend class="px-2 text-sm font-medium text-gray-700 dark:text-gray-300">Detail (optional)</legend>
+            <div class="mt-3 grid gap-4 sm:grid-cols-2">
+              <div>
+                <label for="quantity" class="mb-1 block text-xs text-gray-500 dark:text-gray-400">Quantity</label>
+                <input
+                  type="number"
+                  id="quantity"
+                  [(ngModel)]="quantity"
+                  name="quantity"
+                  min="0"
+                  step="1"
+                  class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-800 dark:bg-gray-900 dark:text-white/90"
+                  [disabled]="loading()"
+                />
+              </div>
+              <div>
+                <label for="price" class="mb-1 block text-xs text-gray-500 dark:text-gray-400">Price</label>
+                <input
+                  type="number"
+                  id="price"
+                  [(ngModel)]="price"
+                  name="price"
+                  min="0"
+                  step="0.01"
+                  class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-800 dark:bg-gray-900 dark:text-white/90"
+                  [disabled]="loading()"
+                />
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Address -->
+          <fieldset class="rounded-xl border border-gray-200 p-4 dark:border-gray-700">
+            <legend class="px-2 text-sm font-medium text-gray-700 dark:text-gray-300">Address (optional)</legend>
+            <div class="mt-3 space-y-3">
+              <div>
+                <label for="addressName" class="mb-1 block text-xs text-gray-500 dark:text-gray-400">Address name</label>
+                <input
+                  type="text"
+                  id="addressName"
+                  [(ngModel)]="addressName"
+                  name="addressName"
+                  placeholder="e.g. Grand Ballroom, 5th Ave"
+                  class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-800 dark:bg-gray-900 dark:text-white/90"
+                  [disabled]="loading()"
+                />
+              </div>
+              <div class="grid gap-3 sm:grid-cols-2">
+                <div>
+                  <label for="latitude" class="mb-1 block text-xs text-gray-500 dark:text-gray-400">Latitude</label>
+                  <input
+                    type="number"
+                    id="latitude"
+                    [(ngModel)]="latitude"
+                    name="latitude"
+                    step="any"
+                    placeholder="40.7484"
+                    class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-800 dark:bg-gray-900 dark:text-white/90"
+                    [disabled]="loading()"
+                  />
+                </div>
+                <div>
+                  <label for="longitude" class="mb-1 block text-xs text-gray-500 dark:text-gray-400">Longitude</label>
+                  <input
+                    type="number"
+                    id="longitude"
+                    [(ngModel)]="longitude"
+                    name="longitude"
+                    step="any"
+                    placeholder="-73.9857"
+                    class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-800 dark:bg-gray-900 dark:text-white/90"
+                    [disabled]="loading()"
+                  />
+                </div>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Contact -->
+          <fieldset class="rounded-xl border border-gray-200 p-4 dark:border-gray-700">
+            <legend class="px-2 text-sm font-medium text-gray-700 dark:text-gray-300">Contact (optional)</legend>
+            <div class="mt-3 space-y-3">
+              <div class="grid gap-3 sm:grid-cols-2">
+                <div>
+                  <label for="firstName" class="mb-1 block text-xs text-gray-500 dark:text-gray-400">First name</label>
+                  <input
+                    type="text"
+                    id="firstName"
+                    [(ngModel)]="firstName"
+                    name="firstName"
+                    class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-800 dark:bg-gray-900 dark:text-white/90"
+                    [disabled]="loading()"
+                  />
+                </div>
+                <div>
+                  <label for="lastName" class="mb-1 block text-xs text-gray-500 dark:text-gray-400">Last name</label>
+                  <input
+                    type="text"
+                    id="lastName"
+                    [(ngModel)]="lastName"
+                    name="lastName"
+                    class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-800 dark:bg-gray-900 dark:text-white/90"
+                    [disabled]="loading()"
+                  />
+                </div>
+              </div>
+              <div>
+                <label for="phone" class="mb-1 block text-xs text-gray-500 dark:text-gray-400">Phone</label>
+                <input
+                  type="text"
+                  id="phone"
+                  [(ngModel)]="phone"
+                  name="phone"
+                  placeholder="+1 555 123 4567"
+                  class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-800 dark:bg-gray-900 dark:text-white/90"
+                  [disabled]="loading()"
+                />
+              </div>
+            </div>
+          </fieldset>
+
+          @if (error()) {
+            <div class="rounded-lg border border-error-200 bg-error-50 px-4 py-3 text-sm text-error-700 dark:border-error-800 dark:bg-error-500/10 dark:text-error-400" role="alert">
+              {{ error() }}
+            </div>
+          }
+
+          <div class="flex gap-3">
+            <button
+              type="submit"
+              class="rounded-lg bg-brand-500 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-brand-600 disabled:opacity-70 disabled:cursor-not-allowed"
+              [disabled]="loading()"
+            >
+              {{ loading() ? 'Creating…' : 'Create Item' }}
+            </button>
+            <a
+              routerLink="/"
+              class="inline-block rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+            >
+              Cancel
+            </a>
+          </div>
+        </form>
+      }
+    </div>
+  </app-component-card>
+</div>
