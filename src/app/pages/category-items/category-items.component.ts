@@ -1,8 +1,10 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ItemsService, Item } from '../../services/items.service';
 import { ItemComponent } from '../../shared/components/item/item.component';
+import { AuthService } from '../../services/auth.service';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-category-items',
@@ -18,9 +20,13 @@ export class CategoryItemsComponent implements OnInit {
   loading = signal(true);
   error = signal<string | null>(null);
 
+  cartSize = computed(() => this.cartService.getCartSize());
+
   constructor(
     private route: ActivatedRoute,
-    private itemsService: ItemsService
+    private itemsService: ItemsService,
+    public authService: AuthService,
+    public cartService: CartService
   ) {}
 
   ngOnInit(): void {

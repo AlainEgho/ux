@@ -1,12 +1,16 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Item } from '../../services/items.service';
+import { AuthService } from '../../services/auth.service';
+import { CartService } from '../../services/cart.service';
+import { computed } from '@angular/core';
 
 @Component({
   selector: 'app-item-leaf',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './item-leaf.component.html',
   styles: ``,
 })
@@ -15,8 +19,17 @@ export class ItemLeafComponent implements OnInit {
   categoryId = signal<string | null>(null);
   categoryName = signal<string>('');
   imageFailed = signal(false);
+  showAddToCartModal = signal(false);
+  eventDate = '';
+  quantity = 1;
+  cartSize = computed(() => this.cartService.getCartSize());
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    public authService: AuthService,
+    public cartService: CartService
+  ) {}
 
   ngOnInit(): void {
     const state = history.state as {
@@ -60,5 +73,24 @@ export class ItemLeafComponent implements OnInit {
 
   backLabel(): string {
     return this.categoryName() || 'Back';
+  }
+
+  openAddToCartModal(): void {
+    this.showAddToCartModal.set(true);
+    const today = new Date();
+    today.setDate(today.getDate() + 1);
+    this.eventDate = today.toISOString().split('T')[0];
+    this.quantity = 1;
+  }
+
+  closeAddToCartModal(): void {
+    this.showAddToCartModal.set(false);
+  }
+
+  addToCart(): void {
+    const it = this.item();
+    if (!it || !this.eventDate) return;
+    this.cartService.addToCart(it, this.quantity, this.eventDate);
+    this.showAddToCartModal.set(false);
   }
 }
