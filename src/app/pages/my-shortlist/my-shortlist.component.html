@@ -1,0 +1,90 @@
+<app-page-breadcrumb pageTitle="My Shortlist" />
+<div class="space-y-6">
+  <app-component-card
+    title="My Shortlist"
+    desc="Users who have added your items to their carts."
+  >
+    @if (loading()) {
+      <p class="py-8 text-center text-theme-sm text-gray-500 dark:text-gray-400">
+        Loading…
+      </p>
+    } @else if (error()) {
+      <div
+        class="rounded-lg border border-error-200 bg-error-50 px-4 py-3 text-theme-sm text-error-700 dark:border-error-800 dark:bg-error-500/10 dark:text-error-400"
+        role="alert"
+      >
+        {{ error() }}
+      </div>
+    } @else {
+      <div
+        class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]"
+      >
+        <div class="max-w-full overflow-x-auto">
+          <table class="min-w-full">
+            <thead class="border-b border-gray-100 dark:border-white/[0.05]">
+              <tr>
+                <th
+                  class="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                >
+                  ID
+                </th>
+                <th
+                  class="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                >
+                  Name
+                </th>
+                <th
+                  class="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                >
+                  Email
+                </th>
+                <th
+                  class="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                >
+                  Cart Event Date
+                </th>
+                <th
+                  class="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                >
+                  Cart Created At
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 dark:divide-white/[0.05]">
+              @if (buyers().length === 0) {
+                <tr>
+                  <td
+                    colspan="5"
+                    class="px-5 py-8 text-center text-theme-sm text-gray-500 dark:text-gray-400"
+                  >
+                    No buyers yet. Users who add your items to their cart will
+                    appear here.
+                  </td>
+                </tr>
+              }
+              @for (row of buyers(); track row.id) {
+                <tr>
+                  <td class="px-5 py-4 sm:px-6 text-theme-sm text-gray-800 dark:text-white/90">
+                    {{ row.id }}
+                  </td>
+                  <td class="px-4 py-3 text-theme-sm text-gray-800 dark:text-white/90">
+                    {{ fullName(row) }}
+                  </td>
+                  <td class="px-4 py-3 text-theme-sm text-gray-500 dark:text-gray-400">
+                    {{ row.email }}
+                  </td>
+                  <td class="px-4 py-3 text-theme-sm text-gray-500 dark:text-gray-400">
+                    {{ formatDate(row.cartEventDate) }}
+                  </td>
+                  <td class="px-4 py-3 text-theme-sm text-gray-500 dark:text-gray-400">
+                    {{ formatDate(row.cartCreatedAt) }}
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+  </app-component-card>
+</div>

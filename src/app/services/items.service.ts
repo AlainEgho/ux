@@ -45,6 +45,21 @@ export interface ItemsApiResponse {
   data: Item[];
 }
 
+export interface ItemBuyer {
+  id: number;
+  email: string;
+  firstName: string;
+  lastName: string;
+  cartEventDate?: string | null;
+  cartCreatedAt?: string | null;
+}
+
+export interface ItemBuyersApiResponse {
+  success: boolean;
+  message: string;
+  data: ItemBuyer[];
+}
+
 export interface CreateItemDetail {
   quantity: number;
   price: number;
@@ -93,5 +108,11 @@ export class ItemsService {
 
   create(body: CreateItemRequest): Observable<CreateItemResponse> {
     return this.http.post<CreateItemResponse>(this.baseUrl, body);
+  }
+
+  getBuyers(): Observable<ItemBuyer[]> {
+    return this.http
+      .get<ItemBuyersApiResponse>(`${this.baseUrl}/buyers`)
+      .pipe(map((res) => res.data ?? []));
   }
 }
