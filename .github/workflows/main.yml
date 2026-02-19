@@ -22,7 +22,7 @@ jobs:
           node-version: 24
 
       - run: npm install
-      - run: npm run build -- --configuration production
+      - run: npm run build -- --configuration production  --base-href /ux/
 
       - uses: actions/upload-pages-artifact@v3
         with:
