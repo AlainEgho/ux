@@ -24,6 +24,7 @@ export class CheckoutComponent implements OnInit {
   eventDate = signal<string>('');
   paymentMethod = signal<string>('ONLINE');
   error = signal<string | null>(null);
+  success = signal<boolean>(false);
   submitting = signal(false);
 
   readonly paymentMethods = [
@@ -107,7 +108,8 @@ export class CheckoutComponent implements OnInit {
           this.submitting.set(false);
           if (res.success) {
             this.cartService.clearCart();
-            this.router.navigate(['/app/shortener']);
+            this.cartItems.set([]);
+            this.success.set(true);
           } else {
             this.error.set(res.message || 'Failed to submit cart.');
           }

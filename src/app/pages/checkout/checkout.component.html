@@ -1,7 +1,31 @@
 <app-page-breadcrumb pageTitle="Checkout" />
 <div class="space-y-6">
   <app-component-card title="Checkout" desc="Review your cart items and submit your order.">
-    @if (cartItems().length === 0) {
+    @if (success()) {
+      <div class="rounded-xl border border-success-200 bg-success-50 px-6 py-10 text-center dark:border-success-800 dark:bg-success-500/10">
+        <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-success-500 text-white">
+          <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-success-800 dark:text-success-300">Order submitted successfully</h3>
+        <p class="mt-2 text-sm text-success-700 dark:text-success-400">Your cart has been submitted. Thank you!</p>
+        <div class="mt-6 flex flex-wrap justify-center gap-3">
+          <a
+            routerLink="/app/shortener"
+            class="rounded-lg bg-success-600 px-6 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-success-700"
+          >
+            Back to Shortener
+          </a>
+          <a
+            routerLink="/"
+            class="rounded-lg border border-success-300 bg-white px-6 py-2.5 text-sm font-medium text-success-700 transition hover:bg-success-50 dark:border-success-700 dark:bg-success-500/20 dark:text-success-300 dark:hover:bg-success-500/10"
+          >
+            Browse Categories
+          </a>
+        </div>
+      </div>
+    } @else if (cartItems().length === 0) {
       <div class="py-12 text-center">
         <p class="text-gray-500 dark:text-gray-400">Your cart is empty.</p>
         <a routerLink="/" class="mt-4 inline-block text-brand-500 hover:underline">
