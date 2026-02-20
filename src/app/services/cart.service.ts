@@ -13,6 +13,7 @@ export interface CartItem {
 
 export interface CreateCartRequest {
   status: string;
+  paymentMethod: string;
   eventDate: string;
   items: CartItem[];
 }

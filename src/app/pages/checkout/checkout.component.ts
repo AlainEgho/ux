@@ -22,8 +22,16 @@ import { CartService } from '../../services/cart.service';
 export class CheckoutComponent implements OnInit {
   cartItems = signal<ReturnType<CartService['getCartItems']>>([]);
   eventDate = signal<string>('');
+  paymentMethod = signal<string>('ONLINE');
   error = signal<string | null>(null);
   submitting = signal(false);
+
+  readonly paymentMethods = [
+    { value: 'ONLINE', label: 'Online' },
+    { value: 'CASH', label: 'Cash' },
+    { value: 'CARD', label: 'Card' },
+    { value: 'OTHER', label: 'Other' },
+  ];
 
   constructor(
     private cartService: CartService,
@@ -83,6 +91,7 @@ export class CheckoutComponent implements OnInit {
     this.error.set(null);
     const requestBody = {
       status: 'PENDING',
+      paymentMethod: this.paymentMethod(),
       eventDate: this.eventDate(),
       items: items.map((ci) => ({
         itemId: ci.itemId,

@@ -25,6 +25,22 @@
           />
         </div>
 
+        <!-- Payment Method -->
+        <div>
+          <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Payment Method <span class="text-error-500">*</span>
+          </label>
+          <select
+            [value]="paymentMethod()"
+            (change)="paymentMethod.set($any($event.target).value)"
+            class="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm dark:border-gray-800 dark:bg-gray-900 dark:text-white/90"
+          >
+            @for (pm of paymentMethods; track pm.value) {
+              <option [value]="pm.value">{{ pm.label }}</option>
+            }
+          </select>
+        </div>
+
         <!-- Cart Items -->
         <div>
           <h3 class="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
