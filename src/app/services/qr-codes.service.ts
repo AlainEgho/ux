@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
-const API_BASE = 'http://localhost:8081';
+const API_BASE = environment.apiBaseUrl;
 /** Base URL for short links (redirect/view); may differ from API. */
-const SHORT_LINK_BASE = 'http://localhost:3000';
+const SHORT_LINK_BASE = environment.frontendBaseUrl;
 
 export interface QrCodeItem {
   id: number;

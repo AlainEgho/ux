@@ -1,4 +1,6 @@
-const AUTH_API_BASE = 'http://localhost:8081';
+import { environment } from '../../environments/environment';
+
+const AUTH_API_BASE = environment.apiBaseUrl;
 
 export const AUTH_API = {
   baseUrl: AUTH_API_BASE,

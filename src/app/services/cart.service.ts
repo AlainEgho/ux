@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Item } from './items.service';
+import { environment } from '../../environments/environment';
 
-const API_BASE = 'http://localhost:8081';
+const API_BASE = environment.apiBaseUrl;
 
 export interface CartItem {
   itemId: string;
