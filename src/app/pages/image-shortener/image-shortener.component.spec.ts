@@ -3,7 +3,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { ImageShortenerComponent } from './image-shortener.component';
 import { ImageUploadsService } from '../../services/image-uploads.service';
 
-const API_URL = 'http://localhost:8081/api/image-uploads';
+const API_URL = 'https://localhost:8081/api/image-uploads';
 
 describe('ImageShortenerComponent', () => {
   let component: ImageShortenerComponent;
@@ -81,7 +81,7 @@ describe('ImageShortenerComponent', () => {
     const responseData = {
       id: 1,
       shortCode: 'a1b2c3d4',
-      imageUrl: 'http://localhost:8081/i/a1b2c3d4',
+      imageUrl: 'https://localhost:8081/i/a1b2c3d4',
       contentType: 'image/png',
       originalFileName: 'test.png',
       userId: 1,
@@ -140,7 +140,7 @@ describe('ImageShortenerComponent', () => {
   }));
 
   it('qrCodeImageUrl should return QR server URL with encoded data', () => {
-    const url = 'http://localhost:8081/i/abc123';
+    const url = 'https://localhost:8081/i/abc123';
     const qr = component.qrCodeImageUrl(url);
     expect(qr).toContain('https://api.qrserver.com/v1/create-qr-code/');
     expect(qr).toContain('size=120x120');
@@ -151,7 +151,7 @@ describe('ImageShortenerComponent', () => {
     const res = {
       id: 1,
       shortCode: 'x',
-      imageUrl: 'http://localhost:8081/i/x',
+      imageUrl: 'https://localhost:8081/i/x',
       contentType: 'image/png',
       originalFileName: 'f.png',
       userId: 1,
@@ -163,7 +163,7 @@ describe('ImageShortenerComponent', () => {
     component.copyImageUrl(res);
     tick(0); // run promise microtask
     expect(component.copied()).toBe(true);
-    expect(writeText).toHaveBeenCalledWith('http://localhost:8081/i/x');
+    expect(writeText).toHaveBeenCalledWith('https://localhost:8081/i/x');
 
     tick(2500); // run setTimeout that clears copied
     expect(component.copied()).toBe(false);

@@ -5,7 +5,7 @@ import {
 } from '@angular/common/http/testing';
 import { ImageUploadsService } from './image-uploads.service';
 
-const API_BASE = 'http://localhost:8081';
+const API_BASE = 'https://localhost:8081';
 const API_URL = `${API_BASE}/api/image-uploads`;
 
 describe('ImageUploadsService', () => {
