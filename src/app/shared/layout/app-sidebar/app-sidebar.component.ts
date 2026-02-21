@@ -34,6 +34,11 @@ export class AppSidebarComponent {
       path: "/app/shortener",
     },
     {
+      icon: `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M13.19 4.5a.75.75 0 0 1 .75-.75h5.12a.75.75 0 0 1 .75.75v5.12a.75.75 0 0 1-1.5 0V6.31l-6.22 6.22a.75.75 0 0 1-1.06-1.06l6.22-6.22h-3.31a.75.75 0 0 1-.75-.75ZM4.5 10.81a.75.75 0 0 1 .75.75v5.12a.75.75 0 0 1-.75.75H4.5a.75.75 0 0 1-.75-.75v-5.12a.75.75 0 0 1 .75-.75h.75Z" fill="currentColor"></path></svg>`,
+      name: "Direct Shortener",
+      path: "/app/direct-shortener",
+    },
+    {
       icon: `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M3 5.25A2.25 2.25 0 0 1 5.25 3h13.5A2.25 2.25 0 0 1 21 5.25v13.5A2.25 2.25 0 0 1 18.75 21H5.25A2.25 2.25 0 0 1 3 18.75V5.25Zm3 0v13.5h13.5V5.25H6Zm1.5 3a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5a.75.75 0 0 1-.75-.75Zm.75 3.75a.75.75 0 0 0 0 1.5h7.5a.75.75 0 0 0 0-1.5h-7.5Zm0 3a.75.75 0 0 0 0 1.5h4.5a.75.75 0 0 0 0-1.5h-4.5Z" fill="currentColor"></path></svg>`,
       name: "My Shortener URLs",
       path: "/app/my-shortener-urls",

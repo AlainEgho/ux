@@ -19,6 +19,7 @@ import { SignInComponent } from './pages/auth-pages/sign-in/sign-in.component';
 import { SignUpComponent } from './pages/auth-pages/sign-up/sign-up.component';
 import { CalenderComponent } from './pages/calender/calender.component';
 import { ShortenerComponent } from './pages/shortener/shortener.component';
+import { DirectShortenerComponent } from './pages/direct-shortener/direct-shortener.component';
 import { MyShortenerUrlsComponent } from './pages/my-shortener-urls/my-shortener-urls.component';
 import { ImageShortenerComponent } from './pages/image-shortener/image-shortener.component';
 import { MyUploadedImagesComponent } from './pages/my-uploaded-images/my-uploaded-images.component';
@@ -63,6 +64,11 @@ export const routes: Routes = [
         path: 'shortener',
         component: ShortenerComponent,
         title: 'URL Shortener',
+      },
+      {
+        path: 'direct-shortener',
+        component: DirectShortenerComponent,
+        title: 'Direct Shortener',
       },
       {
         path: 'my-shortener-urls',
