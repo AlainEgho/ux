@@ -32,6 +32,7 @@ import { MyShortlistComponent } from './pages/my-shortlist/my-shortlist.componen
 import { LandingComponent } from './pages/landing/landing.component';
 import { VerifyEmailComponent } from './pages/auth-pages/verify-email/verify-email.component';
 import { MessagesComponent } from './pages/messages/messages.component';
+import { WallComponent } from './pages/wall/wall.component';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -125,6 +126,11 @@ export const routes: Routes = [
         path: 'messages',
         component: MessagesComponent,
         title: 'Messages',
+      },
+      {
+        path: 'wall',
+        component: WallComponent,
+        title: 'Wall',
       },
       {
         path: 'form-elements',

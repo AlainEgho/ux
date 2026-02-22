@@ -1,0 +1,134 @@
+<div class="mx-auto max-w-2xl px-4 py-6">
+  <header class="mb-6">
+    <h1 class="text-title-md font-semibold text-gray-800 dark:text-white/90">Wall</h1>
+    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+      Share a message or photo. All authenticated users can see posts here.
+    </p>
+  </header>
+
+  <!-- New post form -->
+  <section class="mb-8 rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+    <form (ngSubmit)="onSubmit()" class="space-y-4">
+      <div>
+        <textarea
+          [(ngModel)]="content"
+          name="content"
+          placeholder="What's on your mind?"
+          rows="3"
+          maxlength="10000"
+          class="w-full resize-y rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 dark:border-gray-800 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-gray-500"
+          [disabled]="submitting()"
+        ></textarea>
+        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+          {{ content.length }} / 10000 characters
+        </p>
+      </div>
+      <div class="flex flex-wrap items-center gap-3">
+        <label class="cursor-pointer rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-600 transition hover:bg-gray-50 dark:border-gray-800 dark:text-gray-400 dark:hover:bg-gray-800">
+          <span class="inline-flex items-center gap-2">
+            <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            Add image
+          </span>
+          <input
+            #fileInputRef
+            type="file"
+            accept="image/*"
+            class="sr-only"
+            (change)="onFileSelected($event)"
+          />
+        </label>
+        @if (imagePreview) {
+          <div class="relative inline-block">
+            <img
+              [src]="imagePreview"
+              alt="Preview"
+              class="h-20 w-20 rounded-lg border border-gray-200 object-cover dark:border-gray-700"
+            />
+            <button
+              type="button"
+              (click)="clearImage()"
+              class="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-gray-800 text-white hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600"
+              aria-label="Remove image"
+            >
+              <svg class="size-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        }
+      </div>
+      @if (submitError()) {
+        <p class="text-sm text-error-500">{{ submitError() }}</p>
+      }
+      <button
+        type="submit"
+        class="rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-brand-600 disabled:opacity-70 disabled:cursor-not-allowed"
+        [disabled]="submitting() || (!content.trim() && !imagePreview)"
+      >
+        {{ submitting() ? 'Publishing…' : 'Publish' }}
+      </button>
+    </form>
+  </section>
+
+  <!-- Feed -->
+  <section>
+    @if (loading() && posts().length === 0) {
+      <p class="py-8 text-center text-sm text-gray-500 dark:text-gray-400">Loading posts…</p>
+    } @else if (error()) {
+      <p class="py-8 text-center text-sm text-error-500">{{ error() }}</p>
+    } @else if (posts().length === 0) {
+      <p class="py-8 text-center text-sm text-gray-500 dark:text-gray-400">No posts yet. Be the first to share!</p>
+    } @else {
+      <ul class="space-y-4">
+        @for (post of posts(); track post.id) {
+          <li class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+            <div class="flex items-start gap-3">
+              <span
+                class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-500/20 text-sm font-medium text-brand-600 dark:text-brand-400"
+              >
+                {{ post.authorFirstName.charAt(0) }}{{ post.authorLastName.charAt(0) || post.authorEmail.charAt(0) }}
+              </span>
+              <div class="min-w-0 flex-1">
+                <p class="font-medium text-gray-800 dark:text-white/90">
+                  {{ authorName(post) }}
+                </p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">
+                  {{ formatDate(post.createdAt) }}
+                </p>
+                @if (post.content) {
+                  <p class="mt-2 whitespace-pre-wrap break-words text-sm text-gray-700 dark:text-gray-300">
+                    {{ post.content }}
+                  </p>
+                }
+                @if (post.imagePath) {
+                  <div class="mt-3">
+                    <img
+                      [src]="imageUrl(post)"
+                      alt="Post image"
+                      class="max-h-80 max-w-full rounded-lg border border-gray-200 object-contain dark:border-gray-700"
+                      loading="lazy"
+                    />
+                  </div>
+                }
+              </div>
+            </div>
+          </li>
+        }
+      </ul>
+      @if (hasMore()) {
+        <div class="mt-6 flex justify-center">
+          <button
+            type="button"
+            (click)="loadMore()"
+            [disabled]="loadingMore()"
+            class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:opacity-70 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800"
+          >
+            {{ loadingMore() ? 'Loading…' : 'Load more' }}
+          </button>
+        </div>
+      }
+    }
+  </section>
+</div>
