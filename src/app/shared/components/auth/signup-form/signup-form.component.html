@@ -133,6 +133,17 @@
             </span>
           </p>
         </div>
+        <!-- Country -->
+        <div>
+          <app-label>Country (optional)</app-label>
+          <app-country-autocomplete
+            id="country"
+            [value]="country"
+            (valueChange)="country = $event"
+            placeholder="Select or type country..."
+            [disabled]="loading()"
+          />
+        </div>
         <!-- Optional: Address & Phone -->
         <div>
           <app-label>Address (optional)</app-label>
@@ -140,7 +151,15 @@
         </div>
         <div>
           <app-label>Phone (optional)</app-label>
-          <app-input-field type="tel" [value]="phoneNumber" (valueChange)="phoneNumber = toStr($event)" name="phoneNumber" placeholder="+1 555 123 4567" [disabled]="loading()" />
+          <app-phone-number-input
+            id="phone"
+            name="phoneNumber"
+            [value]="phoneNumber"
+            (valueChange)="phoneNumber = $event"
+            (countryChange)="phoneCountry = $event"
+            placeholder="Phone number"
+            [disabled]="loading()"
+          />
         </div>
         <!-- Button -->
         <div>

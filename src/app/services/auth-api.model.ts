@@ -43,6 +43,7 @@ export interface SignupRequest {
   password: string;
   address?: string;
   phoneNumber?: string;
+  country?: string;
 }
 
 export interface LoginRequest {

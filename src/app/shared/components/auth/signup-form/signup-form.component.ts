@@ -3,9 +3,12 @@ import { Router } from '@angular/router';
 import { LabelComponent } from '../../form/label/label.component';
 import { CheckboxComponent } from '../../form/input/checkbox.component';
 import { InputFieldComponent } from '../../form/input/input-field.component';
+import { CountryAutocompleteComponent } from '../../form/country-autocomplete/country-autocomplete.component';
+import { PhoneNumberInputComponent } from '../../form/phone-number-input/phone-number-input.component';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../../services/auth.service';
+import type { SignupRequest } from '../../../../services/auth-api.model';
 
 @Component({
   selector: 'app-signup-form',
@@ -13,6 +16,8 @@ import { AuthService } from '../../../../services/auth.service';
     LabelComponent,
     CheckboxComponent,
     InputFieldComponent,
+    CountryAutocompleteComponent,
+    PhoneNumberInputComponent,
     RouterModule,
     FormsModule,
   ],
@@ -28,6 +33,8 @@ export class SignupFormComponent implements OnInit {
   password = '';
   address = '';
   phoneNumber = '';
+  phoneCountry = '';
+  country = '';
   error = signal<string | null>(null);
   loading = signal(false);
 
@@ -61,13 +68,16 @@ export class SignupFormComponent implements OnInit {
       return;
     }
     this.loading.set(true);
-    const body = {
+    const country =
+      this.country.trim() || this.phoneCountry.trim() || undefined;
+    const body: SignupRequest = {
       firstName: this.fname.trim(),
       lastName: this.lname.trim(),
       email: this.email.trim(),
       password: this.password,
       ...(this.address.trim() && { address: this.address.trim() }),
       ...(this.phoneNumber.trim() && { phoneNumber: this.phoneNumber.trim() }),
+      ...(country && { country }),
     };
     this.auth.signup(body).subscribe({
       next: (res) => {
