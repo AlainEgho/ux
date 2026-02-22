@@ -1,0 +1,207 @@
+<div class="mx-auto max-w-5xl px-4 py-6">
+  <header class="mb-4">
+    <h1 class="text-title-md font-semibold text-gray-800 dark:text-white/90">Messages</h1>
+    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Chat with online users or continue a conversation.</p>
+  </header>
+  <div class="flex h-[calc(100vh-12rem)] min-h-[400px] max-h-[700px] rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+  <!-- Left: Online + Conversations -->
+  <aside class="flex w-80 shrink-0 flex-col border-r border-gray-200 dark:border-gray-800">
+    <div class="border-b border-gray-200 px-4 py-3 dark:border-gray-800">
+      <h2 class="text-base font-semibold text-gray-800 dark:text-white/90">Messages</h2>
+    </div>
+    <div class="flex-1 overflow-y-auto">
+      <!-- Online users -->
+      <section class="border-b border-gray-200 dark:border-gray-800">
+        <h3 class="px-4 py-2 text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+          Online
+        </h3>
+        @if (loadingOnline()) {
+          <p class="px-4 pb-3 text-sm text-gray-500 dark:text-gray-400">Loading…</p>
+        } @else if (errorOnline()) {
+          <p class="px-4 pb-3 text-sm text-error-500">{{ errorOnline() }}</p>
+        } @else if (onlineUsers().length === 0) {
+          <p class="px-4 pb-3 text-sm text-gray-500 dark:text-gray-400">No one else online</p>
+        } @else {
+          <ul class="pb-2">
+            @for (user of onlineUsers(); track user.id) {
+              <li>
+                <button
+                  type="button"
+                  (click)="selectOnlineUser(user)"
+                  class="flex w-full items-center gap-3 px-4 py-2.5 text-left transition hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                  [class.bg-brand-500/10]="selectedPeer()?.id === user.id"
+                >
+                  <span
+                    class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-500/20 text-sm font-medium text-brand-600 dark:text-brand-400"
+                  >
+                    {{ user.firstName.charAt(0) }}{{ user.lastName.charAt(0) }}
+                  </span>
+                  <div class="min-w-0 flex-1">
+                    <p class="truncate text-sm font-medium text-gray-800 dark:text-white/90">
+                      {{ user.firstName }} {{ user.lastName }}
+                    </p>
+                    <p class="truncate text-xs text-gray-500 dark:text-gray-400">{{ user.email }}</p>
+                  </div>
+                  <span
+                    class="h-2.5 w-2.5 shrink-0 rounded-full bg-green-500"
+                    title="Online"
+                  ></span>
+                </button>
+              </li>
+            }
+          </ul>
+        }
+      </section>
+      <!-- Conversations -->
+      <section>
+        <h3 class="px-4 py-2 text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+          Conversations
+        </h3>
+        @if (loadingConversations()) {
+          <p class="px-4 pb-3 text-sm text-gray-500 dark:text-gray-400">Loading…</p>
+        } @else if (errorConversations()) {
+          <p class="px-4 pb-3 text-sm text-error-500">{{ errorConversations() }}</p>
+        } @else if (conversations().length === 0) {
+          <p class="px-4 pb-3 text-sm text-gray-500 dark:text-gray-400">No conversations yet</p>
+        } @else {
+          <ul class="pb-2">
+            @for (c of conversations(); track c.peerUserId) {
+              <li>
+                <button
+                  type="button"
+                  (click)="selectConversation(c)"
+                  class="flex w-full items-center gap-3 px-4 py-2.5 text-left transition hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                  [class.bg-brand-500/10]="selectedPeer()?.id === c.peerUserId"
+                >
+                  <span
+                    class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-200 text-sm font-medium text-gray-600 dark:bg-gray-700 dark:text-gray-300"
+                  >
+                    {{ c.peerFirstName.charAt(0) }}{{ c.peerLastName.charAt(0) }}
+                  </span>
+                  <div class="min-w-0 flex-1">
+                    <p class="truncate text-sm font-medium text-gray-800 dark:text-white/90">
+                      {{ c.peerFirstName }} {{ c.peerLastName }}
+                    </p>
+                    <p class="truncate text-xs text-gray-500 dark:text-gray-400">
+                      {{ c.lastMessagePreview }}
+                    </p>
+                  </div>
+                  @if (c.unreadCount > 0) {
+                    <span
+                      class="flex h-5 min-w-5 items-center justify-center rounded-full bg-brand-500 px-1.5 text-xs font-medium text-white"
+                    >
+                      {{ c.unreadCount }}
+                    </span>
+                  }
+                </button>
+              </li>
+            }
+          </ul>
+        }
+      </section>
+    </div>
+  </aside>
+
+  <!-- Right: Conversation or placeholder -->
+  <main class="messages-panel flex-1 min-w-0 flex flex-col">
+    @if (!selectedPeer()) {
+      <div class="flex flex-1 items-center justify-center text-gray-500 dark:text-gray-400">
+        <div class="text-center">
+          <p class="text-base font-medium">Select a user to start messaging</p>
+          <p class="mt-1 text-sm">Choose someone from Online or Conversations</p>
+        </div>
+      </div>
+    } @else {
+      <!-- Header -->
+      <header class="flex shrink-0 items-center gap-3 border-b border-gray-200 px-4 py-3 dark:border-gray-800">
+        <span
+          class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-500/20 text-sm font-medium text-brand-600 dark:text-brand-400"
+        >
+          {{ selectedPeer()!.firstName.charAt(0) }}{{ selectedPeer()!.lastName.charAt(0) }}
+        </span>
+        <div class="min-w-0 flex-1">
+          <p class="font-medium text-gray-800 dark:text-white/90">
+            {{ peerDisplayName(selectedPeer()!) }}
+          </p>
+          <p class="truncate text-xs text-gray-500 dark:text-gray-400">{{ selectedPeer()!.email }}</p>
+        </div>
+      </header>
+
+      <!-- Messages (newest at bottom) -->
+      <div class="messages-list flex-1 overflow-y-auto p-4">
+        @if (hasMorePages()) {
+          <div class="flex justify-center py-2">
+            <button
+              type="button"
+              (click)="loadMore()"
+              [disabled]="loadingMore()"
+              class="text-sm text-brand-500 hover:text-brand-600 disabled:opacity-70"
+            >
+              {{ loadingMore() ? 'Loading…' : 'Load older messages' }}
+            </button>
+          </div>
+        }
+        @if (loadingMessages() && messages().length === 0) {
+          <p class="py-4 text-center text-sm text-gray-500 dark:text-gray-400">Loading conversation…</p>
+        } @else {
+          @for (msg of messages(); track msg.id) {
+            <div
+              class="mb-3 flex"
+              [class.justify-end]="msg.fromCurrentUser"
+              [class.justify-start]="!msg.fromCurrentUser"
+            >
+              <div
+                class="max-w-[75%] rounded-2xl px-4 py-2 text-sm"
+                [class.ml-auto]="msg.fromCurrentUser"
+                [class.bg-brand-500]="msg.fromCurrentUser"
+                [class.text-white]="msg.fromCurrentUser"
+                [class.mr-auto]="!msg.fromCurrentUser"
+                [class.bg-gray-200]="!msg.fromCurrentUser"
+                [class.text-gray-800]="!msg.fromCurrentUser"
+                [class.dark:bg-gray-700]="!msg.fromCurrentUser"
+                [class.dark:text-white/90]="!msg.fromCurrentUser"
+              >
+                <p class="whitespace-pre-wrap break-words">{{ msg.content }}</p>
+                <p
+                  class="mt-1 text-xs opacity-80"
+                  [class.text-right]="msg.fromCurrentUser"
+                >
+                  {{ formatMessageTime(msg.createdAt) }}
+                  @if (msg.fromCurrentUser && msg.readAt) {
+                    <span class="ml-1" title="Read">✓✓</span>
+                  }
+                </p>
+              </div>
+            </div>
+          }
+        }
+        <div #messagesEndRef></div>
+      </div>
+
+      <!-- Send form -->
+      <div class="shrink-0 border-t border-gray-200 p-4 dark:border-gray-800">
+        @if (sendError()) {
+          <p class="mb-2 text-sm text-error-500">{{ sendError() }}</p>
+        }
+        <form (ngSubmit)="sendMessage()" class="flex gap-2">
+          <input
+            type="text"
+            [(ngModel)]="newMessageText"
+            name="newMessage"
+            placeholder="Type a message…"
+            maxlength="10000"
+            class="min-w-0 flex-1 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-800 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 dark:border-gray-800 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-gray-500"
+          />
+          <button
+            type="submit"
+            class="shrink-0 rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-brand-600 disabled:opacity-70 disabled:cursor-not-allowed"
+            [disabled]="!newMessageText.trim()"
+          >
+            Send
+          </button>
+        </form>
+      </div>
+    }
+  </main>
+  </div>
+</div>

@@ -9,6 +9,7 @@ import {
   SignupRequest,
   LoginRequest,
 } from './auth-api.model';
+import { WebSocketService } from './websocket.service';
 
 const TOKEN_KEY = 'accessToken';
 const USER_KEY = 'authUser';
@@ -23,7 +24,8 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private wsService: WebSocketService
   ) {}
 
   getAccessToken(): string | null {
@@ -51,9 +53,11 @@ export class AuthService {
     this.user.set(data);
     localStorage.setItem(TOKEN_KEY, data.accessToken);
     localStorage.setItem(USER_KEY, JSON.stringify(data));
+    this.wsService.connect(data.accessToken);
   }
 
   clearSession(): void {
+    this.wsService.disconnect();
     this.token.set(null);
     this.user.set(null);
     localStorage.removeItem(TOKEN_KEY);

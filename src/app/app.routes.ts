@@ -31,6 +31,7 @@ import { CheckoutComponent } from './pages/checkout/checkout.component';
 import { MyShortlistComponent } from './pages/my-shortlist/my-shortlist.component';
 import { LandingComponent } from './pages/landing/landing.component';
 import { VerifyEmailComponent } from './pages/auth-pages/verify-email/verify-email.component';
+import { MessagesComponent } from './pages/messages/messages.component';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -119,6 +120,11 @@ export const routes: Routes = [
         path: 'profile',
         component: ProfileComponent,
         title: 'Profile',
+      },
+      {
+        path: 'messages',
+        component: MessagesComponent,
+        title: 'Messages',
       },
       {
         path: 'form-elements',
