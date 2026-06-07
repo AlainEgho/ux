@@ -34,12 +34,23 @@ import { VerifyEmailComponent } from './pages/auth-pages/verify-email/verify-ema
 import { MessagesComponent } from './pages/messages/messages.component';
 import { WallComponent } from './pages/wall/wall.component';
 import { authGuard } from './guards/auth.guard';
+import { ArchaHomeComponent } from './archa/pages/archa-home/archa-home.component';
 
 export const routes: Routes = [
   {
     path: '',
-    component: LandingComponent,
+    component: ArchaHomeComponent,
     pathMatch: 'full',
+    title: 'Archa Shortener',
+  },
+  {
+    path: 'archa',
+    component: ArchaHomeComponent,
+    title: 'Archa Shortener',
+  },
+  {
+    path: 'categories',
+    component: LandingComponent,
     title: 'Categories',
   },
   {
