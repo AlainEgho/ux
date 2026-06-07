@@ -4,5 +4,5 @@ export const environment = {
   apiBaseUrl: 'http://aegho.us-east-1.elasticbeanstalk.com:5000',
   frontendBaseUrl: 'http://aegho.us-east-1.elasticbeanstalk.com:5000',
   shortenerApiBaseUrl: 'http://aegho.us-east-1.elasticbeanstalk.com:5000',
-  archaApiBaseUrl: 'https://your-api.example.com',
+  archaApiBaseUrl: 'https://bl-njnyvp1er-alain-s-projects15.vercel.app/',
 };
