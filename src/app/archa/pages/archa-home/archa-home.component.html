@@ -1,0 +1,361 @@
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+  <header class="border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
+    <div class="mx-auto max-w-5xl px-4 py-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between gap-4">
+        <div>
+          <h1 class="text-xl font-semibold text-gray-900 dark:text-white">Archa Shortener</h1>
+          <p class="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
+            Shorten links and images with the NestJS API
+          </p>
+        </div>
+        <div class="flex shrink-0 items-center gap-3">
+          <a
+            routerLink="/categories"
+            class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+          >
+            Categories
+          </a>
+          <a
+            routerLink="/signin"
+            class="rounded-lg bg-brand-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-brand-600"
+          >
+            Sign In
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+    <div class="mb-6 flex flex-wrap gap-2">
+      <button
+        type="button"
+        class="rounded-lg px-4 py-2 text-sm font-medium transition"
+        [class.bg-brand-500]="activeTab() === 'link'"
+        [class.text-white]="activeTab() === 'link'"
+        [class.bg-white]="activeTab() !== 'link'"
+        [class.text-gray-700]="activeTab() !== 'link'"
+        [class.dark:bg-gray-800]="activeTab() !== 'link'"
+        [class.dark:text-gray-300]="activeTab() !== 'link'"
+        (click)="setTab('link')"
+      >
+        Shorten Link
+      </button>
+      <button
+        type="button"
+        class="rounded-lg px-4 py-2 text-sm font-medium transition"
+        [class.bg-brand-500]="activeTab() === 'image'"
+        [class.text-white]="activeTab() === 'image'"
+        [class.bg-white]="activeTab() !== 'image'"
+        [class.text-gray-700]="activeTab() !== 'image'"
+        [class.dark:bg-gray-800]="activeTab() !== 'image'"
+        [class.dark:text-gray-300]="activeTab() !== 'image'"
+        (click)="setTab('image')"
+      >
+        Shorten Image
+      </button>
+      <button
+        type="button"
+        class="rounded-lg px-4 py-2 text-sm font-medium transition"
+        [class.bg-brand-500]="activeTab() === 'list'"
+        [class.text-white]="activeTab() === 'list'"
+        [class.bg-white]="activeTab() !== 'list'"
+        [class.text-gray-700]="activeTab() !== 'list'"
+        [class.dark:bg-gray-800]="activeTab() !== 'list'"
+        [class.dark:text-gray-300]="activeTab() !== 'list'"
+        (click)="setTab('list')"
+      >
+        My Shortened Items
+        @if (storage.items().length > 0) {
+          <span class="ml-1.5 rounded-full bg-white/20 px-1.5 py-0.5 text-xs">
+            {{ storage.items().length }}
+          </span>
+        }
+      </button>
+    </div>
+
+    @if (activeTab() === 'link') {
+      <section class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <h2 class="mb-1 text-lg font-semibold text-gray-900 dark:text-white">URL Shortener</h2>
+        <p class="mb-6 text-sm text-gray-500 dark:text-gray-400">
+          Paste a long URL to get a short link via <code class="text-xs">POST /shorten</code>.
+        </p>
+
+        <form (ngSubmit)="shortenUrl()" class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end">
+          <div class="min-w-0 flex-1">
+            <label for="urlInput" class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              URL
+            </label>
+            <input
+              id="urlInput"
+              type="url"
+              [(ngModel)]="urlInput"
+              name="urlInput"
+              placeholder="https://example.com"
+              class="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-800 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 dark:border-gray-800 dark:bg-gray-900 dark:text-white/90"
+              [disabled]="urlLoading()"
+            />
+          </div>
+          <button
+            type="submit"
+            class="rounded-lg bg-brand-500 px-6 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-70"
+            [disabled]="urlLoading()"
+          >
+            {{ urlLoading() ? 'Shortening…' : 'Shorten' }}
+          </button>
+        </form>
+
+        @if (urlError()) {
+          <div
+            class="mb-6 rounded-lg border border-error-200 bg-error-50 px-4 py-3 text-sm text-error-700 dark:border-error-800 dark:bg-error-500/10 dark:text-error-400"
+            role="alert"
+          >
+            {{ urlError() }}
+          </div>
+        }
+
+        @if (urlResult(); as res) {
+          <div class="rounded-xl border border-gray-200 bg-gray-50 p-6 dark:border-gray-800 dark:bg-gray-900/50">
+            <p class="mb-2 text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+              Short link
+            </p>
+            <div class="mb-4 flex flex-wrap items-center gap-3">
+              <a
+                [href]="api.shortLinkUrl(res.shortUrl)"
+                target="_blank"
+                rel="noopener"
+                class="min-w-0 flex-1 truncate text-sm font-medium text-brand-500 hover:underline"
+              >
+                {{ api.shortLinkUrl(res.shortUrl) }}
+              </a>
+              <button
+                type="button"
+                class="shrink-0 rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-300"
+                (click)="copyText(api.shortLinkUrl(res.shortUrl), 'url')"
+              >
+                {{ urlCopied() ? 'Copied!' : 'Copy' }}
+              </button>
+            </div>
+            <p class="text-xs text-gray-500 dark:text-gray-400">
+              Code: <span class="font-medium text-gray-700 dark:text-gray-300">{{ res.shortCode }}</span>
+            </p>
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              Original:
+              <span class="break-all font-medium text-gray-700 dark:text-gray-300">{{ res.originalUrl }}</span>
+            </p>
+          </div>
+        }
+      </section>
+    }
+
+    @if (activeTab() === 'image') {
+      <section class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <h2 class="mb-1 text-lg font-semibold text-gray-900 dark:text-white">Image Shortener</h2>
+        <p class="mb-6 text-sm text-gray-500 dark:text-gray-400">
+          Upload JPEG, PNG, GIF, or WebP (max 10 MB) via <code class="text-xs">POST /upload-image</code>.
+        </p>
+
+        <div class="mb-6">
+          <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Image file</label>
+          <input
+            type="file"
+            accept="image/jpeg,image/png,image/gif,image/webp"
+            class="block w-full text-sm text-gray-600 file:mr-4 file:rounded-lg file:border-0 file:bg-brand-500 file:px-4 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-brand-600 dark:text-gray-400"
+            (change)="onImageSelected($event)"
+            [disabled]="imageLoading()"
+          />
+        </div>
+
+        @if (imagePreview()) {
+          <div class="mb-6">
+            <p class="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Preview</p>
+            <img
+              [src]="imagePreview()"
+              alt="Selected image preview"
+              class="max-h-64 max-w-full rounded-lg border border-gray-200 object-contain dark:border-gray-800"
+            />
+          </div>
+        }
+
+        <button
+          type="button"
+          class="mb-6 rounded-lg bg-brand-500 px-6 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-70"
+          [disabled]="!imageFile || imageLoading()"
+          (click)="uploadImage()"
+        >
+          {{ imageLoading() ? 'Uploading…' : 'Upload & Shorten' }}
+        </button>
+
+        @if (imageError()) {
+          <div
+            class="mb-6 rounded-lg border border-error-200 bg-error-50 px-4 py-3 text-sm text-error-700 dark:border-error-800 dark:bg-error-500/10 dark:text-error-400"
+            role="alert"
+          >
+            {{ imageError() }}
+          </div>
+        }
+
+        @if (imageResult(); as res) {
+          <div class="rounded-xl border border-gray-200 bg-gray-50 p-6 dark:border-gray-800 dark:bg-gray-900/50">
+            <p class="mb-2 text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+              Image link
+            </p>
+            <div class="mb-4 flex flex-wrap items-center gap-3">
+              <a
+                [href]="api.imageUrl(res.imageUrl)"
+                target="_blank"
+                rel="noopener"
+                class="min-w-0 flex-1 truncate text-sm font-medium text-brand-500 hover:underline"
+              >
+                {{ api.imageUrl(res.imageUrl) }}
+              </a>
+              <button
+                type="button"
+                class="shrink-0 rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-800 dark:text-gray-300"
+                (click)="copyText(api.imageUrl(res.imageUrl), 'image')"
+              >
+                {{ imageCopied() ? 'Copied!' : 'Copy' }}
+              </button>
+            </div>
+            <img
+              [src]="api.imageUrl(res.imageUrl)"
+              [alt]="res.originalFileName ?? 'Uploaded image'"
+              class="max-h-80 max-w-full rounded-lg border border-gray-200 object-contain dark:border-gray-800"
+            />
+          </div>
+        }
+      </section>
+    }
+
+    @if (activeTab() === 'list') {
+      <section class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">My Shortened Items</h2>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              Saved in this browser (no server list endpoint).
+            </p>
+          </div>
+          @if (storage.items().length > 0) {
+            <button
+              type="button"
+              class="rounded-lg border border-error-200 px-3 py-2 text-xs font-medium text-error-600 transition hover:bg-error-50 dark:border-error-800 dark:text-error-400 dark:hover:bg-error-500/10"
+              (click)="clearAll()"
+            >
+              Clear all
+            </button>
+          }
+        </div>
+
+        <div class="mb-6 flex flex-wrap gap-2">
+          <button
+            type="button"
+            class="rounded-lg px-3 py-1.5 text-xs font-medium transition"
+            [class.bg-brand-500]="listFilter() === 'all'"
+            [class.text-white]="listFilter() === 'all'"
+            [class.bg-gray-100]="listFilter() !== 'all'"
+            [class.text-gray-700]="listFilter() !== 'all'"
+            [class.dark:bg-gray-800]="listFilter() !== 'all'"
+            (click)="listFilter.set('all')"
+          >
+            All ({{ storage.items().length }})
+          </button>
+          <button
+            type="button"
+            class="rounded-lg px-3 py-1.5 text-xs font-medium transition"
+            [class.bg-brand-500]="listFilter() === 'url'"
+            [class.text-white]="listFilter() === 'url'"
+            [class.bg-gray-100]="listFilter() !== 'url'"
+            [class.text-gray-700]="listFilter() !== 'url'"
+            [class.dark:bg-gray-800]="listFilter() !== 'url'"
+            (click)="listFilter.set('url')"
+          >
+            Links ({{ storage.urlItems.length }})
+          </button>
+          <button
+            type="button"
+            class="rounded-lg px-3 py-1.5 text-xs font-medium transition"
+            [class.bg-brand-500]="listFilter() === 'image'"
+            [class.text-white]="listFilter() === 'image'"
+            [class.bg-gray-100]="listFilter() !== 'image'"
+            [class.text-gray-700]="listFilter() !== 'image'"
+            [class.dark:bg-gray-800]="listFilter() !== 'image'"
+            (click)="listFilter.set('image')"
+          >
+            Images ({{ storage.imageItems.length }})
+          </button>
+        </div>
+
+        @if (filteredItems().length === 0) {
+          <div class="py-12 text-center">
+            <p class="text-gray-500 dark:text-gray-400">No shortened items yet.</p>
+            <p class="mt-2 text-sm text-gray-400 dark:text-gray-500">
+              Create a short link or upload an image to see it here.
+            </p>
+          </div>
+        } @else {
+          <div class="space-y-4">
+            @for (item of filteredItems(); track item.id) {
+              <article
+                class="rounded-xl border border-gray-200 p-4 dark:border-gray-800"
+              >
+                <div class="flex flex-wrap items-start justify-between gap-3">
+                  <div class="min-w-0 flex-1">
+                    <div class="mb-2 flex flex-wrap items-center gap-2">
+                      <span
+                        class="rounded-full px-2 py-0.5 text-xs font-medium"
+                        [class.bg-blue-100]="item.type === 'url'"
+                        [class.text-blue-700]="item.type === 'url'"
+                        [class.bg-purple-100]="item.type === 'image'"
+                        [class.text-purple-700]="item.type === 'image'"
+                        [class.dark:bg-blue-500/20]="item.type === 'url'"
+                        [class.dark:text-blue-300]="item.type === 'url'"
+                        [class.dark:bg-purple-500/20]="item.type === 'image'"
+                        [class.dark:text-purple-300]="item.type === 'image'"
+                      >
+                        {{ item.type === 'url' ? 'Link' : 'Image' }}
+                      </span>
+                      <span class="text-xs text-gray-400">{{ formatDate(item.createdAt) }}</span>
+                    </div>
+                    <a
+                      [href]="item.fullShortUrl"
+                      target="_blank"
+                      rel="noopener"
+                      class="block truncate text-sm font-medium text-brand-500 hover:underline"
+                    >
+                      {{ item.fullShortUrl }}
+                    </a>
+                    @if (item.originalUrl) {
+                      <p class="mt-1 truncate text-xs text-gray-500 dark:text-gray-400">
+                        → {{ item.originalUrl }}
+                      </p>
+                    }
+                    @if (item.originalFileName) {
+                      <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                        File: {{ item.originalFileName }}
+                      </p>
+                    }
+                  </div>
+                  <button
+                    type="button"
+                    class="shrink-0 rounded-lg border border-gray-200 px-3 py-1.5 text-xs text-gray-500 transition hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800"
+                    (click)="removeItem(item.id)"
+                  >
+                    Remove
+                  </button>
+                </div>
+                @if (item.type === 'image') {
+                  <img
+                    [src]="item.fullShortUrl"
+                    [alt]="item.originalFileName ?? 'Shortened image'"
+                    class="mt-3 max-h-40 max-w-full rounded-lg border border-gray-200 object-contain dark:border-gray-800"
+                  />
+                }
+              </article>
+            }
+          </div>
+        }
+      </section>
+    }
+  </main>
+</div>

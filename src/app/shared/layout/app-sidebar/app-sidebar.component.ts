@@ -29,6 +29,11 @@ export class AppSidebarComponent {
   // Main nav items
   navItems: NavItem[] = [
     {
+      icon: `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M13.19 4.5a.75.75 0 0 1 .75-.75h5.12a.75.75 0 0 1 .75.75v5.12a.75.75 0 0 1-1.5 0V6.31l-6.22 6.22a.75.75 0 0 1-1.06-1.06l6.22-6.22h-3.31a.75.75 0 0 1-.75-.75ZM4.5 10.81a.75.75 0 0 1 .75.75v5.12a.75.75 0 0 1-.75.75H4.5a.75.75 0 0 1-.75-.75v-5.12a.75.75 0 0 1 .75-.75h.75Z" fill="currentColor"></path></svg>`,
+      name: "Archa Shortener",
+      path: "/archa",
+    },
+    {
       icon: `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M13.19 4.5a.75.75 0 0 1 .75-.75h5.12a.75.75 0 0 1 .75.75v5.12a.75.75 0 0 1-1.5 0V6.31l-6.22 6.22a.75.75 0 0 1-1.06-1.06l6.22-6.22h-3.31a.75.75 0 0 1-.75-.75ZM4.5 10.81a.75.75 0 0 1 .75.75v5.12a.75.75 0 0 1-.75.75H4.5a.75.75 0 0 1-.75-.75v-5.12a.75.75 0 0 1 .75-.75h.75Zm0-1.5A2.25 2.25 0 0 0 2.25 12v3A2.25 2.25 0 0 0 4.5 17.25H6a2.25 2.25 0 0 0 2.25-2.25v-3A2.25 2.25 0 0 0 6 9.31H4.5Z" fill="currentColor"></path></svg>`,
       name: "Shorten",
       path: "/app/shortener",
