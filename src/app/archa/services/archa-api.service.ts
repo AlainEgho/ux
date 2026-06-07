@@ -19,6 +19,7 @@ export class ArchaApiService {
   createShortUrl(body: CreateShortUrlRequest): Observable<CreateShortUrlResponse> {
     return this.http.post<CreateShortUrlResponse>(`${this.base}/shorten`, body, {
       headers: this.authHeaders(),
+       withCredentials: true 
     });
   }
 
