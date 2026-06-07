@@ -13,7 +13,7 @@ export class ArchaApiService {
 
   private authHeaders(): HttpHeaders | undefined {
     const token = localStorage.getItem('access_token');
-    return token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : undefined;
+    return token ? new HttpHeaders({ 'x-vercel-protection-bypass':'a1XEseh6W5iQS5roFspPlY2uD495xvc8',Authorization: `Bearer ${token}` }) :  new HttpHeaders({ 'x-vercel-protection-bypass':'a1XEseh6W5iQS5roFspPlY2uD495xvc8'});
   }
 
   createShortUrl(body: CreateShortUrlRequest): Observable<CreateShortUrlResponse> {
