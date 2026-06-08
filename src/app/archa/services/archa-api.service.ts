@@ -13,7 +13,7 @@ export class ArchaApiService {
 
   private authHeaders(): HttpHeaders | undefined {
     const token = localStorage.getItem('access_token');
-    return token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) :  undefined);
+    return token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) :  undefined;
   }
 
   createShortUrl(body: CreateShortUrlRequest): Observable<CreateShortUrlResponse> {
