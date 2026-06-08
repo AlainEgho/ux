@@ -9,6 +9,8 @@ import { UploadImageResponse } from '../models/image.model';
 export class ArchaApiService {
   private readonly base = environment.archaApiBaseUrl;
 
+//test
+
   constructor(private readonly http: HttpClient) {}
 
   private authHeaders(): HttpHeaders | undefined {
