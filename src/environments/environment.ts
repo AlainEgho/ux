@@ -3,5 +3,6 @@ export const environment = {
   apiBaseUrl: 'https://localhost:8081',
   frontendBaseUrl: 'http://localhost:3000',
   shortenerApiBaseUrl: 'https://localhost:8081',
-  archaApiBaseUrl: 'http://localhost:3000',
+  archaApiBaseUrl: 'https://bl-rosy.vercel.app',
 };
+// archaApiBaseUrl: 'https://localhost:3000/
